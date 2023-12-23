@@ -29,7 +29,6 @@ async function scrapeProductPages(url) {
     const url = await page.evaluate((el) => el.href, a);
     vegetableUrls.push(url);
   }
-  console.log(vegetableUrls);
 
   const globalProductUrls = [];
   for (let u of vegetableUrls) {
@@ -50,6 +49,7 @@ async function scrapeProductPages(url) {
 
   let productsData = [];
 
+  page.setCacheEnabled(false);
   for (let productsUrls of globalProductUrls) {
     for (let url of productsUrls) {
       await page.goto(url, {
@@ -64,7 +64,8 @@ async function scrapeProductPages(url) {
       );
       productData.description = await getDescription(page, ".descr p");
 
-      const imagePath = await getImage(page);
+      // const imagePath = await getImage(page);
+      const imagePath = await getImageWaitResponse(page);
       productData.imagePath = `/products/${imagePath}`;
 
       productsData.push(productData);
@@ -104,6 +105,48 @@ async function getImage(page) {
       fs.writeFileSync(filePath, buffer, "binary");
     }
   });
+
+  return `${folderName}/${fileName}`;
+}
+
+async function getImageWaitResponse(page) {
+  // Split the page URL into parts
+  const pageUrlParts = page.url().split("/");
+  const folderName = pageUrlParts[pageUrlParts.length - 2];
+  let fileName = pageUrlParts[pageUrlParts.length - 1];
+
+  try {
+    const imgElement = await page.$("#content .row img");
+    const imgUrl = await page.evaluate((img) => img.src, imgElement);
+    // Extract the file extension from the image URL
+    const extension = imgUrl.split(".").pop();
+
+    // Append the extension to the fileName
+    fileName = `${fileName}.${extension}`;
+
+    // Wait for the response of the image
+
+    const response = await page.waitForResponse(
+      (response) =>
+        response.url() === imgUrl &&
+        response.request().resourceType() === "image",
+      { timeout: 5000 }
+    );
+
+    const buffer = await response.buffer();
+
+    // Resolve the file path
+    const filePath = path.resolve(__dirname, folderName, fileName);
+
+    if (!fs.existsSync(path.dirname(filePath))) {
+      await mkdir(path.dirname(filePath), { recursive: true });
+    }
+    // Write the image data to a file
+    fs.writeFileSync(filePath, buffer, "binary");
+  } catch (e) {
+    console.log(e.message);
+  }
+
   return `${folderName}/${fileName}`;
 }
 
