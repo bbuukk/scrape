@@ -1,6 +1,15 @@
 import { writeFile } from "fs/promises";
 import fs from "fs";
+import { mkdir } from "fs/promises";
+
 import puppeteer from "puppeteer";
+import * as path from "path";
+
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 async function scrapeProductPages(url) {
   const browser = await puppeteer.launch({
@@ -40,8 +49,7 @@ async function scrapeProductPages(url) {
   }
 
   let productsData = [];
-  //   print2DArray(globalProductUrls);
-  //   write2DArrayToFile(globalProductUrls, "test.json");
+
   for (let productsUrls of globalProductUrls) {
     for (let url of productsUrls) {
       await page.goto(url, {
@@ -56,8 +64,10 @@ async function scrapeProductPages(url) {
       );
       productData.description = await getDescription(page, ".descr p");
 
+      const imagePath = await getImage(page);
+      productData.imagePath = `/products/${imagePath}`;
+
       productsData.push(productData);
-      // await new Promise((r) => setTimeout(r, 1000));
     }
   }
   console.log(productsData);
@@ -65,45 +75,36 @@ async function scrapeProductPages(url) {
   return productsData;
 }
 
-function getImage(page) {
+async function getImage(page) {
+  const imgElement = await page.$("#content .row img");
+  const imgUrl = await page.evaluate((img) => img.src, imgElement);
+
+  // Split the page URL into parts
+  const pageUrlParts = page.url().split("/");
+  const folderName = pageUrlParts[pageUrlParts.length - 2];
+  let fileName = pageUrlParts[pageUrlParts.length - 1];
+
+  // Extract the file extension from the image URL
+  const extension = imgUrl.split(".").pop();
+
+  // Append the extension to the fileName
+  fileName = `${fileName}.${extension}`;
+
   page.on("response", async (response) => {
-    if (response.request().resourceType() === "image") {
-      const pageUrlParts = page.url().split("/");
-      const folderName = pageUrlParts[pageUrlParts.length - 1];
-      const fileName = pageUrlParts[pageUrlParts.length - 2];
-
-      // const image = await page.$$("#content .row img ");
-
-      // const url = response.url();
+    if (response.url() === imgUrl) {
       const buffer = await response.buffer();
-      // const fileName = url.split("/").pop();
+
+      // Resolve the file path
       const filePath = path.resolve(__dirname, folderName, fileName);
 
+      if (!fs.existsSync(path.dirname(filePath))) {
+        await mkdir(path.dirname(filePath), { recursive: true });
+      }
       // Write the image data to a file
       fs.writeFileSync(filePath, buffer, "binary");
     }
   });
-}
-
-function write2DArrayToFile(array, filename) {
-  const jsonString = JSON.stringify(array, null, 2);
-  fs.writeFile(filename, jsonString, (err) => {
-    if (err) {
-      console.error("Error writing file", err);
-    } else {
-      console.log(`Successfully wrote 2D array to ${filename}`);
-    }
-  });
-}
-
-function print2DArray(array) {
-  for (let i = 0; i < array.length; i++) {
-    let row = "";
-    for (let j = 0; j < array[i].length; j++) {
-      row += array[i][j] + " ";
-    }
-    console.log(row);
-  }
+  return `${folderName}/${fileName}`;
 }
 
 async function getTitle(page, className) {
@@ -150,4 +151,4 @@ async function writeToFile(data, path) {
 const productsData = await scrapeProductPages(
   "https://yaskrava.com.ua/ua/semena/semena-ovoschey-evropaket/"
 );
-// writeToFile(productsData, "globalProductsData.json");
+writeToFile(productsData, "globalProductsData.json");
