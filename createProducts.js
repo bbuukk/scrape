@@ -3893,5 +3893,6 @@ for (let product of products) {
     newProducts.push(newProduct);
   }
 }
+console.log(newProducts.length);
 
-writeToFile(newProducts, "yaskrava.json");
+// writeToFile(newProducts, "yaskrava.json");
