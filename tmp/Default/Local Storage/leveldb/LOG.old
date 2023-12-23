@@ -1,3 +1,5 @@
-2023/12/22-22:07:24.540 69e0 Reusing MANIFEST C:\Users\bohda\dev\scrape\tmp\Default\Local Storage\leveldb/MANIFEST-000001
-2023/12/22-22:07:24.543 69e0 Recovering log #3
-2023/12/22-22:07:24.545 69e0 Reusing old log C:\Users\bohda\dev\scrape\tmp\Default\Local Storage\leveldb/000003.log 
+2023/12/23-07:55:09.095 432c Reusing MANIFEST C:\Users\bohda\dev\scrape\tmp\Default\Local Storage\leveldb/MANIFEST-000001
+2023/12/23-07:55:09.097 432c Recovering log #3
+2023/12/23-07:55:09.098 432c Level-0 table #3: started
+2023/12/23-07:55:09.105 432c Level-0 table #3: 11686 bytes OK
+2023/12/23-07:55:09.111 432c Delete type=0 #3

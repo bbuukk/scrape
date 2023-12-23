@@ -65,6 +65,26 @@ async function scrapeProductPages(url) {
   return productsData;
 }
 
+function getImage(page) {
+  page.on("response", async (response) => {
+    if (response.request().resourceType() === "image") {
+      const pageUrlParts = page.url().split("/");
+      const folderName = pageUrlParts[pageUrlParts.length - 1];
+      const fileName = pageUrlParts[pageUrlParts.length - 2];
+
+      // const image = await page.$$("#content .row img ");
+
+      // const url = response.url();
+      const buffer = await response.buffer();
+      // const fileName = url.split("/").pop();
+      const filePath = path.resolve(__dirname, folderName, fileName);
+
+      // Write the image data to a file
+      fs.writeFileSync(filePath, buffer, "binary");
+    }
+  });
+}
+
 function write2DArrayToFile(array, filename) {
   const jsonString = JSON.stringify(array, null, 2);
   fs.writeFile(filename, jsonString, (err) => {
@@ -130,4 +150,4 @@ async function writeToFile(data, path) {
 const productsData = await scrapeProductPages(
   "https://yaskrava.com.ua/ua/semena/semena-ovoschey-evropaket/"
 );
-writeToFile(productsData, "globalProductsData.json");
+// writeToFile(productsData, "globalProductsData.json");
