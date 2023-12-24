@@ -3880,7 +3880,7 @@ for (let product of products) {
       name: product.name,
       category: "654fcdaf0cb31d285bd7e951",
       description: product.description,
-      imagePath: product.imagePath,
+      imageUrl: product.imagePath,
       characteristics: {
         Пакування: "Паперовий пакетик",
         Вага: weight,
