@@ -1,3 +1,4 @@
+import { getImages } from "./getImage.js";
 import { writeToFile } from "../../utils/writeToFile.js";
 import { red, flash, terminator } from "../../utils/variables.js";
 import CyrillicToTranslit from "cyrillic-to-translit-js";
@@ -33,33 +34,49 @@ async function scrapeSearch(searchEntries) {
     waitUntil: "domcontentloaded",
   });
 
-  //   const productsLandingUrls = await (async function GetProductLandingUrls() {
-  //     let urls = [];
-  //     const searchEntriesArray = searchEntries.split("\n");
-  //     for (const entry of searchEntriesArray) {
-  //       const url = await searchFor(entry);
-  //       urls.push(url);
-  //     }
-  //     return urls;
-  //   })();
+  page.setDefaultNavigationTimeout(120000); // 120 seconds
+  const productsLandingUrls = await (async function GetProductLandingUrls() {
+    let urls = [];
+    const searchEntriesArray = searchEntries.split("\n");
+    for (const entry of searchEntriesArray) {
+      const url = await searchFor(entry);
+      urls.push(url);
+    }
+    return urls;
+  })();
 
   //   for debug
-  const productsLandingUrls = [
-    {
-      name: "Модульний будиночок для котів Телепет",
-      url: "https://rozetka.com.ua/ua/346044016/p346044016/",
-    },
-  ];
-  await page.goto("https://rozetka.com.ua/ua/346044016/p346044016/", {
-    waitUntil: "domcontentloaded",
-  });
+  // const productsLandingUrls = [
+  //   {
+  //     name: "Модульний будиночок для котів Телепет",
+  //     url: "https://rozetka.com.ua/ua/346044016/p346044016/",
+  //   },
+  // ];
+  // await page.goto("https://rozetka.com.ua/ua/346044016/p346044016/", {
+  //   waitUntil: "domcontentloaded",
+  // });
 
   const products = [];
 
   page.setCacheEnabled(false);
+  page.setDefaultNavigationTimeout(120000); // 60 seconds
+
   for (const productInfo of productsLandingUrls) {
     let product = { name: productInfo.name };
     if (productInfo.url) {
+      const imagesUrls = new Set();
+      page.on("response", (res) => {
+        if (
+          res.request().resourceType() === "image" &&
+          res.url().includes("/goods/images/big")
+        ) {
+          imagesUrls.add(res.url());
+          console.log(res.url());
+        }
+      });
+
+      // function saveImage() {}
+
       await page.goto(productInfo.url, {
         waitUntil: "domcontentloaded",
       });
@@ -79,122 +96,6 @@ async function scrapeSearch(searchEntries) {
         }
         return category;
       })();
-
-      product.image = await (async function getImage() {
-        const categorySplitted = product.category.split(",");
-        let folderName = categorySplitted[categorySplitted.length - 2];
-
-        const cyrillicToTranslit = new CyrillicToTranslit();
-
-        folderName = cyrillicToTranslit
-          .transform(folderName)
-          .toLowerCase()
-          .split(" ")
-          .join("_");
-
-        let fileName = cyrillicToTranslit
-          .transform(product.name)
-          .toLowerCase()
-          .split(" ")
-          .join("_");
-
-        try {
-          const images = await page.$$("img.picture-container__picture");
-          const imgsUrl = [];
-          for (const img of images) {
-            let u = await page.evaluate((img) => img.src, img);
-            // u = u.replace("big", "original");
-            imgsUrl.push(u);
-          }
-
-          //   https://content.rozetka.com.ua/goods/images/big/289674671.jpg
-
-          //   for (const [index, img] of images.entries()) {
-          // const imgUrl = await page.evaluate((img) => img.src, img);
-
-          console.log(imgsUrl);
-
-          const response = await page.waitForResponse(
-            (response) => imgsUrl.includes(response.url()),
-            //   response.request().resourceType() === "image",
-            { timeout: 5000 }
-          );
-          console.log(response.url());
-
-          // fileName = `${fileName}_${index}.${extension}`;
-          // const extension = imgUrl.split(".").pop();
-
-          // console.log(response.url());
-
-          // const buffer = await response.buffer();
-
-          // const filePath = path.resolve(__dirname, folderName, fileName);
-
-          // if (!fs.existsSync(path.dirname(filePath))) {
-          //   await mkdir(path.dirname(filePath), { recursive: true });
-          // }
-          // fs.writeFileSync(filePath, buffer, "binary");
-          //   }
-        } catch (e) {
-          console.log(`${red}${e.message}\n${flash}`);
-        }
-
-        return `${folderName}/${fileName}`;
-      })();
-
-      //   page.setCacheEnabled(false);
-      //   product.image = await (async function getImage() {
-      //     const categorySplitted = product.category.split(",");
-      //     console.log(categorySplitted);
-      //     let folderName = categorySplitted[categorySplitted.length - 2];
-      //     console.log(folderName);
-
-      //     const cyrillicToTranslit = new CyrillicToTranslit();
-      //     // const folderName = cyrillicToTranslit.transform().toLowerCase();
-      //     folderName = cyrillicToTranslit
-      //       .transform(folderName)
-      //       .toLowerCase()
-      //       .split(" ")
-      //       .join("_");
-
-      //     let fileName = cyrillicToTranslit
-      //       .transform(product.name)
-      //       .toLowerCase()
-      //       .split(" ")
-      //       .join("_");
-
-      //     try {
-      //       const img = await page.$("img.picture-container__picture");
-
-      //       const imgUrl = await page.evaluate((img) => img.src, img);
-      //       console.log(imgUrl);
-      //       const extension = imgUrl.split(".").pop();
-
-      //       fileName = `${fileName}.${extension}`;
-
-      //       const response = await page.waitForResponse(
-      //         (response) =>
-      //           response.url() === imgUrl &&
-      //           response.request().resourceType() === "image",
-      //         { timeout: 5000 }
-      //       );
-
-      //       const buffer = await response.buffer();
-
-      //       // Resolve the file path
-      //       const filePath = path.resolve(__dirname, folderName, fileName);
-
-      //       if (!fs.existsSync(path.dirname(filePath))) {
-      //         await mkdir(path.dirname(filePath), { recursive: true });
-      //       }
-      //       // Write the image data to a file
-      //       fs.writeFileSync(filePath, buffer, "binary");
-      //     } catch (e) {
-      //       console.log(`${red}${e.message}\n${flash}`);
-      //     }
-
-      //     return `${folderName}/${fileName}`;
-      //   })();
 
       product.title = await (async function getTitle() {
         const heading = await page.$(
@@ -243,6 +144,70 @@ async function scrapeSearch(searchEntries) {
         }
         return characteristics;
       })();
+
+      // networkidle0
+      try {
+        await page.waitForNavigation({ waitUntil: "networkidle2" });
+      } catch (e) {
+        console.log(`${red}${e.message}\n${flash}`);
+      }
+      console.log(imagesUrls);
+
+      product.images = await (async function getImage() {
+        const imagesPaths = [];
+        const categorySplitted = product.category.split(",");
+        let folderName = categorySplitted[categorySplitted.length - 2];
+
+        const cyrillicToTranslit = new CyrillicToTranslit();
+
+        folderName = cyrillicToTranslit
+          .transform(folderName)
+          .toLowerCase()
+          .split(" ")
+          .join("_");
+        folderName = `images/${folderName}`;
+
+        let fileName = cyrillicToTranslit
+          .transform(product.name)
+          .toLowerCase()
+          .split(" ")
+          .join("_");
+
+        try {
+          const imagesUrlsArray = Array.from(imagesUrls);
+          for (let index = 0; index < imagesUrlsArray.length; index++) {
+            const imageUrl = imagesUrlsArray[index];
+
+            console.log(index, "  ->   ", imageUrl);
+
+            const extension = imageUrl.split(".").pop();
+            fileName = `${fileName}_${index}.${extension}`;
+            imagesPaths.push(`${folderName}/${fileName}`);
+
+            const responsePromise = page.waitForResponse(
+              (response) => response.url() === imageUrl,
+              { timeout: 5000 }
+            );
+
+            await page.goto(imageUrl, {
+              waitUntil: "domcontentloaded",
+            });
+
+            const response = await responsePromise;
+
+            const buffer = await response.buffer();
+            const filePath = path.resolve(__dirname, folderName, fileName);
+
+            if (!fs.existsSync(path.dirname(filePath))) {
+              await mkdir(path.dirname(filePath), { recursive: true });
+            }
+            fs.writeFileSync(filePath, buffer, "binary");
+          }
+        } catch (e) {
+          console.log(`${red}${e.message}\n${flash}`);
+        }
+        return imagesPaths;
+      })();
     } else {
       console.log(`${red}${productInfo.name} NOT FOUND\n${flash}${terminator}`);
     }
@@ -251,6 +216,7 @@ async function scrapeSearch(searchEntries) {
     products.push(product);
   }
 
+  await browser.close();
   return products;
 }
 
@@ -258,13 +224,15 @@ async function searchFor(entry) {
   const searchForm = await page.$("form.search-form");
 
   const inputField = await searchForm.$("input[name='search']");
-  await new Promise((r) => setTimeout(r, 1000)); //time delay to mimic human slowness
+  await new Promise((r) => setTimeout(r, 500)); //time delay to mimic human slowness
   await inputField.type(entry);
 
   const submitButton = await searchForm.$("button.button");
+
   await Promise.all([
     submitButton.click(),
-    page.waitForNavigation({ waitUntil: "networkidle0" }),
+    page.waitForNavigation({ waitUntil: ["networkidle2", "domcontentloaded"] }),
+    // page.waitForNavigation({ waitUntil: "domcontentloaded" }),
   ]);
 
   let product = {};
@@ -289,8 +257,7 @@ async function getLandingProductUrl() {
 }
 
 const searchEntries = `Модульний будиночок для котів Телепет
-Адресник для котів і собак металевий кісточка Waudog Smart ID з QR паспортом Абстракція
-Адресник для котів і собак металевий круг Waudog Smart ID 3 QR паспортом Абстракція
+Адресник для котів і собак металевий круг Waudog Smart ID Абстракція
 Тренувальний снаряд для собак Puller діаметр 12.5см
 Тренувальний снаряд для собак Puller діаметр 18см
 Тренувальний снаряд для собак Puller діаметр 19.5см
@@ -302,31 +269,55 @@ const searchEntries = `Модульний будиночок для котів �
 СУПЕРІУМ Панацея протипаразитарні таблетки для котів 0.5-2кг
 СУПЕРІУМ Панацея протипаразитарні таблетки для котів 2-8кг
 СУПЕРІУМ Панацея протипаразитарні таблетки для котів 8-16кг
-Нашийник CoLLar одинарний коричневий 00036
-Нашийник CoLLar одинарний з прикрасами чорний 00041
-Нашийник CoLLar одинарний чорний 00151
-Шлея з бавовняної стрічки CoLLar для середніх собак 0637
-Шлея з бавовняної стрічки CoLLar для великих собак 0645
-Шлея з бавовняної стрічки CoLLar для малих та середніх собак 0635
-Нашийник з бавовняної стрічки CoLLar безрозмірний 6754
-Нашийник з бавовняної стрічки CoLLar безрозмірний 6755
-Нашийник з бавовняної стрічки CoLLar подвійний 6137
-Нашийник з бавовняної стрічки CoLLar 0144
-Нашийник для собак нейлоновий WAUDOG Nylon з QR-паспортом Мілітарі 281-4026
-Нашийник для собак нейлоновий WAUDOG Nylon з QR-паспортом Мілітарі 280-4026
-Нашийник для котів та дрібних порід собак нейлоновий WAUDOG Nylon 3 QR-паспортом Мілітарі 279-40
-Повідець для собак з нейлону регульований WAUDOG Nylon Мілітарі 370-4026
-Нашийник шкіряний WAUDOG Glamour 3 QR паспортом з стразами квіти Ш 9 Д 21-29см ментоловий 32
-Нашийник шкіряний WAUDOG Glamour 3 QR паспортом з стразами квіти 9 Д 19-25см помаранчевий
-Нашийник шкіряний WAUDOG Glamour 3 QR паспортом з стразами квіти Ш 9 Д 18-21см блакитний 325
-Нашийник шкіряний WAUDOG Glamour 3 QR паспортом з стразами квіти Ш 9 Д 18-21 рожевий
-Нашийник шкіряний WAUDOG Glamour 3 QR паспортом з стразами квіти Ш 9 Д 18-21 см салатовий
-Нашийник з бавовняної стрічки Collar подвійний 6138
-Повідець з бавовняної стрічки Collar 0498
-Нашийник з бавовняної стрічки Collar безрозмірний 6756
-Нашийник з бавовняної стрічки Collar подвійний 6136
-Нашийник з бавовняної стрічки Collar 0240
-Повідець з бавовняної стрічки Collar 0496`;
+Нашийник CoLLar одинарний коричневий 
+Нашийник CoLLar одинарний з прикрасами чорний 
+Нашийник CoLLar одинарний чорний 
+Шлея з бавовняної стрічки CoLLar для середніх собак 
+Шлея з бавовняної стрічки CoLLar для великих собак 
+Шлея з бавовняної стрічки CoLLar для малих та середніх собак 
+Нашийник для собак нейлоновий WAUDOG Nylon Мілітарі 
+Нашийник для собак нейлоновий WAUDOG Nylon Мілітарі 
+Нашийник для котів та дрібних порід собак нейлоновий WAUDOG Nylon Мілітарі
+Повідець для собак з нейлону регульований WAUDOG Nylon Мілітарі
+Нашийник шкіряний WAUDOG Glamour 21-29см ментоловий 
+Нашийник шкіряний WAUDOG Glamour 9 Д 19-25см помаранчевий
+Нашийник шкіряний WAUDOG Glamour Ш 9 Д 18-21см блакитний 325
+Нашийник шкіряний WAUDOG Glamour Ш 9 Д 18-21 рожевий
+Нашийник шкіряний WAUDOG Glamour Ш 9 Д 18-21 см салатовий
+Нашийник з бавовняної стрічки Collar безрозмірний
+Нашийник з бавовняної стрічки Collar подвійний
+Нашийник з бавовняної стрічки Collar
+Повідець з бавовняної стрічки Collar
+Повідець з відновленої бавовни WAUDOG світовідбиваючий салатовий 
+Повідець з відновленої бавовни WAUDOG світовідбиваючий блакитний 
+М'ячик світлонакопичувальний WAUDOG Fun з отвором для смаколиків 7см 
+Нашийник з відновленої бавовни WAUDOG пластикова пряжка салатовий 
+Нашийник з відновленої бавовни WAUDOG пластикова пряжка блакитний 
+Нашийник нейлоновий WAUDOG Nylon світлонак. фіолетовий 
+Нашийник нейлоновий WAUDOG Nylon світлонак, блакитний 
+Нашийник шкіряний WAUDOG Classic салатовий 
+Повідець нейлоновий WAUDOG Nylon регульований Етно зелений 
+Повідець нейлоновий WAUDOG Nylon регульований Темний рицар 
+Повідець нейлоновий WAUDOG Nylon регульований Чудо жінка 
+Повідець нейлоновий WAUDOG Nylon регульований Рік та Морті 
+Повідець нейлоновий WAUDOG Nylon регульований Супермен 
+Повідець-шнур нейлоновий WAUDOG Nylon амортизуючий 
+Повідець-шнур нейлоновий WAUDOG Nylon амортизуючий 
+Нашийник нейлоновий WAUDOG Nylon Рік та Морті 
+Нашийник нейлоновий WAUDOG Nylon Темний рицар 
+Нашийник нейлоновий WAUDOG Nylon Чудо жінка 
+Нашийник нейлоновий WAUDOG Nylon Супермен 
+Шлея для собак анатомічна WAUDOG Nylon Супермен 
+Шлея для собак анатомічна WAUDOG Nylon Чудо-жінка 
+Шлея для собак анатомічна Н-образна WAUDOG Nylon Рік та морті
+Шлея Collar з повідцем для малих собак коричневий 
+Шлея Collar з повідцем для малих собак чорний 
+Нашийник шкіряний WAUDOG Glamour блакитний 
+Нашийник шкіряний WAUDOG Glamour чорний 
+Шлея для собак безпечна WAUDOG Nylon фіолетова 
+Шлея для собак анатомічна WAUDOG Nylon Етно синій 
+Шлея для собак анатомічна WAUDOG Nylon Авокадо 
+Адресник для котів і собак персоналізований металевий Waudog Smart ID`;
 
 const testEntries = `Модульний будиночок для котів Телепет
 Адресник для котів і собак металевий кісточка Waudog Smart ID з QR паспортом Абстракція
@@ -335,5 +326,5 @@ const testEntries = `Модульний будиночок для котів Т�
 Тренувальний снаряд для собак Puller діаметр 18см
 Тренувальний снаряд для собак Puller діаметр 19.5см`;
 
-const productsData = await scrapeSearch(testEntries);
-//   writeToFile(productsData, "scrape.json");
+const productsData = await scrapeSearch(searchEntries);
+writeToFile(productsData, "search.json");
