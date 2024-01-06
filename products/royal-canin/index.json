@@ -1,0 +1,191 @@
+// categoryfilter = [weight, type, breed, package ]
+// {
+//   "breed": ["Малі", "Мініатюрні"],
+//   "age": "Для цуценят",
+//   "type": ["Сухий", "Вологий"],
+//   "weight": [0.5, 2, 6, 10, 15],
+//   "package": ["Консерви", "Мішок", "Паучі", "Cкляна банка"]
+// },
+
+[
+  {
+    "brand": "Royal Canin",
+    "name": "X-Small Puppy 0.5кг",
+    "category": "657d66763880e95d26c1340e",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "X-Small Adult 0.5кг",
+    "category": "657d66763880e95d26c1340e",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Yorkshire Terrier Puppy 0.5кг",
+    "category": "657d66763880e95d26c1340e",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Yorkshire Terrier Puppy 0.5кг",
+    "category": "657d66763880e95d26c1340e",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Yorkshire Terrier Adult 0.5кг",
+    "category": "657d66763880e95d26c1340e",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Chihuahua Puppy 0.5кг",
+    "category": "657d66763880e95d26c1340e",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Chihuahua Adult 0.5кг",
+    "category": "657d66763880e95d26c1340e",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Mini Puppy 0.8кг",
+    "category": "657d66763880e95d26c1340e",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Mini Adult 0.8кг",
+    "category": "657d66763880e95d26c1340e",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Kitten Brit Short 0.4кг",
+    "category": "657d7ad93880e95d26c13436",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Brit Shorthair 0.4кг",
+    "category": "657d7ad93880e95d26c13436",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Brit Shorthair 2кг",
+    "category": "657d7ad93880e95d26c13436",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Babycat 0.4kg",
+    "category": "657d7ad93880e95d26c13436",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Kitten 0.4kg",
+    "category": "657d7ad93880e95d26c13436",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Sensible 0.4kg",
+    "category": "657d7ad93880e95d26c13436",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Sterilised 0.4kd",
+    "category": "657d7ad93880e95d26c13436",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Urinary S/O 1.5kg",
+    "category": "657d7ad93880e95d26c13436",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  },
+  {
+    "brand": "Royal Canin",
+    "name": "Urinary S/O Cat 0.085kg",
+    "category": "657d7ad93880e95d26c13436",
+    "description": "todo",
+    "imageUrl": "todo",
+    "characteristics": {},
+    "price": 0,
+    "left": 0
+  }
+]
