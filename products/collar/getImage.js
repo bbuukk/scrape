@@ -11,7 +11,7 @@ import { dirname } from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export async function getImage(page, product) {
+export async function getImages(page, product) {
   const imagesPaths = [];
 
   const { folderName, fileName } = getImagePath(product);
