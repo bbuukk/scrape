@@ -33,31 +33,29 @@ async function init(startUrl) {
 
 async function getProductLandingUrls(page, searchEntries) {
   let products = [];
-  const notFound = [];
+  const notFoundEntries = [];
   const searchEntriesArray = searchEntries.split("\n");
 
   for (const entry of searchEntriesArray) {
     const product = await searchFor(page, entry);
     if (product.url == null) {
-      notFound.push(entry);
+      notFoundEntries.push(entry);
     } else {
       products.push(product);
     }
   }
-  return { notFound, products };
+  return { notFoundEntries, products };
 }
 
 async function scrapeSearch(searchEntries) {
-  const { page } = await init(START_URL);
+  const { browser, page } = await init(START_URL);
   const { notFoundEntries, productsLandingUrls } = await getProductLandingUrls(
     page,
     searchEntries
   );
   writeToFile(notFoundEntries, "notFound.txt");
 
-  console.log(productsLandingUrls);
-
-  // const products = [];
+  const products = [];
   // for (const productInfo of productsLandingUrls) {
   //   const product = { name: productInfo.name };
 
@@ -84,8 +82,7 @@ async function scrapeSearch(searchEntries) {
   return products;
 }
 
-const searchEntries = `GJDssggfhfhsdbhd
-Модульний будиночок для котів Телепет
+const searchEntries = `Модульний будиночок для котів Телепет
 СУПЕРІУМ Панацея протипаразитарні таблетки для котів 0.5-2кг для котів і собак
 СУПЕРІУМ Панацея протипаразитарні таблетки для котів 2-8кг для котів і собак
 СУПЕРІУМ Панацея протипаразитарні таблетки для котів 8-16кг для котів і собак
@@ -148,8 +145,16 @@ const searchEntries = `GJDssggfhfhsdbhd
 Шлея для собак анатомічна WAUDOG Nylon Авокадо 
 Адресник для котів і собак персоналізований металевий Waudog Smart ID`;
 
-const productsData = await scrapeSearch(searchEntries);
-writeToFile(productsData, "search.json");
+const testEntries = `Модульний будиночок для котів Телепет
+NONSENSE NOT FOUND FOR DOGS 1
+Спиносад СУПЕРИУМ таблетка від 1.3 до 2.5кг для котів і собак
+NONSENSE NOT FOUND FOR DOGS 2
+Спиносад СУПЕРИУМ таблетка для котів і собак від 5 до 10кг для котів і собак
+NONSENSE NOT FOUND FOR DOGS 3`;
+const productsData = await scrapeSearch(testEntries);
+
+// const productsData = await scrapeSearch(searchEntries);
+// writeToFile(productsData, "search.json");
 
 const allPositions = `Модульний будиночок для котів Телепет
 Адресник для котів і собак металевий круг Waudog Smart ID Абстракція
