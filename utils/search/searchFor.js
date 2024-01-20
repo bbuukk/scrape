@@ -11,7 +11,7 @@ const landingSelector =
 export async function searchFor(page, entry) {
   let product = { entry: entry, url: null };
   try {
-    const delay = Math.random() * 2000 + 500; // Generates a random number between 500 and 2500
+    const delay = Math.random() * 1000 + 500; // Generates a random number between 500 and 1500
     await new Promise((r) => setTimeout(r, delay)); //time delay to mimic human slowness
 
     await page.setUserAgent(randomUserAgent);

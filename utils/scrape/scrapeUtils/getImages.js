@@ -37,7 +37,9 @@ export async function getImages(page, product, imagesUrls, brand) {
       const response = await responsePromise;
 
       await saveImageFile(response, folderName, fileName);
-      imagesPaths.push(`${folderName}/${fileName}`);
+      imagesPaths.push(
+        `https://storage.googleapis.com/live_world/${folderName}/${fileName}`
+      );
     }
   } catch (e) {
     console.log(`${red}${e.message}\n${flash}`);
@@ -47,7 +49,10 @@ export async function getImages(page, product, imagesUrls, brand) {
 }
 
 function getImagePath(product) {
-  let folderName = `images/${product.brand}`.toLowerCase().split(" ").join("_");
+  let folderName = `images/${product.brand}_images`
+    .toLowerCase()
+    .split(" ")
+    .join("_");
 
   const cyrillicToTranslit = new CyrillicToTranslit();
   let fileName = cyrillicToTranslit
@@ -65,6 +70,7 @@ function getImagePath(product) {
 async function saveImageFile(response, folderName, fileName) {
   const buffer = await response.buffer();
   const filePath = path.resolve(folderName, fileName);
+  // const filePath = path.resolve(__dirname, "..", folderName, fileName);
 
   if (!fs.existsSync(path.dirname(filePath))) {
     await mkdir(path.dirname(filePath), { recursive: true });

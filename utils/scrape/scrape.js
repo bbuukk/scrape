@@ -27,11 +27,11 @@ export async function scrapeSearch(page, productsInfo, brand) {
 
     const product = { entry: entry, left: 0, brand: brand };
 
-    product.category = await getCategory(page, product);
     product.name = await getTitle(page);
     product.price = await getPrice(page);
     product.description = await getDescription(page);
     product.characteristics = await getCharacteristics(page);
+    product.category = await getCategory(page, product);
     product.images = await getImages(page, product, imagesUrls, brand);
 
     console.log(product, `\n${terminator}`);

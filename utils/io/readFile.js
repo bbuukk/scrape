@@ -22,6 +22,7 @@ export async function readTxtLinesToArray(filename) {
   });
 
   for await (const line of rl) {
+    if (line === "") break;
     array.push(line);
   }
 

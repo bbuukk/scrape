@@ -1,3 +1,5 @@
+import { flash, red } from "../../globals/variables.js";
+
 export async function getPrice(page) {
   let price = 0;
   try {
