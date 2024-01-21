@@ -9,9 +9,10 @@ export async function scrape(brand) {
   const { browser, page } = await init("https://rozetka.com.ua/ua/");
 
   let productsInfo = null;
+  const infoFilePath = `info/${brand}.json`;
   try {
-    fs.accessSync(`info/${brand}.json`, fs.constants.F_OK);
-    productsInfo = await readJson(`info/${brand}.json`);
+    fs.accessSync(infoFilePath, fs.constants.F_OK);
+    productsInfo = await readJson(infoFilePath);
   } catch (err) {
     console.log("productsInfo not Found");
     const entries = await readTxtLinesToArray(`entries/${brand}.txt`);
@@ -26,49 +27,23 @@ export async function scrape(brand) {
       foundEntries + "\n\n" + notFoundEntries,
       `notFound/${brand}.txt`
     );
-    await writeToFile(
-      JSON.stringify(productsInfo, null, 2),
-      `info/${brand}.json`
-    );
+    await writeToFile(JSON.stringify(productsInfo, null, 2), infoFilePath);
   }
 
-  // const productsData = await scrapeSearch(page, productsInfo, brand);
-  // await writeToFile(
-  //   JSON.stringify(productsData, null, 2),
-  //   `data/${brand}.json`
-  // );
+  let productsData = null;
+  const dataFilePath = `data/${brand}.json`;
+  try {
+    fs.accessSync(dataFilePath, fs.constants.F_OK);
+    productsData = await readJson(dataFilePath);
+  } catch (err) {
+    console.log("data not Found");
+    const productsData = await scrapeSearch(page, productsInfo, brand);
+    await writeToFile(JSON.stringify(productsData, null, 2), dataFilePath);
+  }
 
   await browser.close();
-  // return productsData;
+  return productsData;
 }
-
-// aleana
-// olkar
-// partner(aleana)
-// garden-club
-// prof_nasinna
-// greenharvest
-// recordagro-b
-// household_malceva
-// spektr-agro
-// kiloma_service
-// ukravit
-// kisson
-// vinxozgroup
-// level_xoztovaru
-
-// bazar-luyba
-// animall
-// royal-canin
-// collar
-// pan-kitpan-pes
-// wiskas
-// josera
-// product
-// krug_semenko
-// pruroda
-// myav-4paws-openmeal
-// purina-friskies
 
 const toScrape = [
   "aleana",
@@ -85,6 +60,18 @@ const toScrape = [
   "spektr-agro",
   "ukravit",
   "vinxozgroup",
+  "bazar-luyba",
+  "animall",
+  "royal-canin",
+  "collar",
+  "pan-kitpan-pes",
+  "wiskas",
+  "josera",
+  "product",
+  "krug_semenko",
+  "pruroda",
+  "myav-4paws-openmeal",
+  "purina-friskies",
 ];
 
 for (const brand of toScrape) {

@@ -72,6 +72,12 @@
     "order": 2
   },
   {
+    "name": "Намордники",
+    "path": "Для Собак,Одяг та Аксесуари,Намордники",
+    "imagePath": "https://storage.googleapis.com/live_world/categories/dlya_sobak---odyag_ta_aksesuari---namordniki.jpg",
+    "order": 3
+  },
+  {
     "name": "Нашийники",
     "path": "Для Собак,Нашийники",
     "imagePath": "https://storage.googleapis.com/live_world/categories/dlya_sobak---nashiiniki.jpg",
@@ -90,10 +96,16 @@
     "order": 7
   },
   {
+    "name": "Намордники",
+    "path": "Для Собак,Намордники",
+    "imagePath": "https://storage.googleapis.com/live_world/categories/dlya_sobak---namordniki.jpg",
+    "order": 8
+  },
+  {
     "name": "Догляд та Гігієна",
     "path": "Для Собак,Догляд та Гігієна",
     "imagePath": "https://storage.googleapis.com/live_world/categories/dlya_sobak---doglyad_ta_gіgієna.jpg",
-    "order": 8
+    "order": 9
   },
   {
     "name": "Інструменти для грумінгу",
@@ -105,7 +117,13 @@
     "name": "Спальні місця та перенесення",
     "path": "Для Собак,Спальні місця та перенесення",
     "imagePath": "https://storage.googleapis.com/live_world/categories/dlya_sobak---spalnі_mіstsya_ta_perenesennya.jpg",
-    "order": 9
+    "order": 10
+  },
+  {
+    "name": "Посуд",
+    "path": "Для Собак,Посуд",
+    "imagePath": "https://storage.googleapis.com/live_world/categories/dlya_sobak---posud.jpg",
+    "order": 11
   },
   {
     "name": "Для Котів",
@@ -163,24 +181,6 @@
   },
   {
     "name": "Нашийники",
-    "path": "Для Котів,Одяг та Аксесуари,Нашийники",
-    "imagePath": "https://storage.googleapis.com/live_world/categories/dlya_kotіv---odyag_ta_aksesuari---nashiiniki.jpg",
-    "order": 0
-  },
-  {
-    "name": "Повідці",
-    "path": "Для Котів,Одяг та Аксесуари,Повідці",
-    "imagePath": "https://storage.googleapis.com/live_world/categories/dlya_kotіv---odyag_ta_aksesuari---povіdtsі.jpg",
-    "order": 1
-  },
-  {
-    "name": "Шлеї",
-    "path": "Для Котів,Одяг та Аксесуари,Шлеї",
-    "imagePath": "https://storage.googleapis.com/live_world/categories/dlya_kotіv---odyag_ta_aksesuari---shleї.jpg",
-    "order": 2
-  },
-  {
-    "name": "Нашийники",
     "path": "Для Котів,Нашийники",
     "imagePath": "https://storage.googleapis.com/live_world/categories/dlya_kotіv---nashiiniki.jpg",
     "order": 5
@@ -216,16 +216,22 @@
     "order": 9
   },
   {
+    "name": "Посуд",
+    "path": "Для Котів,Посуд",
+    "imagePath": "https://storage.googleapis.com/live_world/categories/dlya_kotіv---posud.jpg",
+    "order": 10
+  },
+  {
     "name": "Туалети",
     "path": "Для Котів,Туалети",
     "imagePath": "https://storage.googleapis.com/live_world/categories/dlya_kotіv---tualeti.jpg",
-    "order": 10
+    "order": 11
   },
   {
     "name": "Туалетні наповнювачі",
     "path": "Для Котів,Туалетні наповнювачі",
     "imagePath": "https://storage.googleapis.com/live_world/categories/dlya_kotіv---tualetnі_napovnyuvachі.jpg",
-    "order": 11
+    "order": 12
   },
   {
     "name": "Для Гризунів",
